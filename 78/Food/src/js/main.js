@@ -233,87 +233,87 @@ window.addEventListener('DOMContentLoaded', () => {
 
     // Forms
 
-  const forms = document.querySelectorAll('form');
+    const forms = document.querySelectorAll('form');
 
-  const message = {
-    loading: 'img/form/spinner.svg',
-    success: 'Thank you! We will contact you soon.',
-    failure: 'Something went wrong...'
-  }
+    const message = {
+        loading: 'img/form/spinner.svg',
+        success: 'Thank you! We will contact you soon.',
+        failure: 'Something went wrong...'
+    }
 
-  forms.forEach(item => {
-    postData(item);
-  });
-  
-  function postData(form) {
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-
-      const statusMessage = document.createElement('img');
-      statusMessage.src = message.loading;
-      statusMessage.style.cssText = `
-        display: block;
-        margin: 0 auto;
-      `;
-      form.insertAdjacentElement('afterend', statusMessage);
-
-      const request = new XMLHttpRequest();
-      request.open('POST', './server.php');
-      // request.setRequestHeader('Content-type', 'multipart/form-data');
-      request.setRequestHeader('Content-type', 'application/json');
-
-      // new FormData() збирає дані з форми,
-      // але потрібно обов'язково,
-      // щоб в формах був прописаний атрибут 'name'
-      // в такому випадку нам не потрібно відправляти json
-      const formData = new FormData(form);
-
-      // Також дані форми можна передавати в формати json:
-      const object = {};
-
-      formData.forEach(function(value, key) {
-        object[key] = value;
-      });
-
-      const json = JSON.stringify(object);
-
-      request.send(json);
-
-      request.addEventListener('load', () => {
-        if (request.status === 200) {
-          console.log(request.response);
-          showThanksModal(message.success);
-          form.reset();
-          statusMessage.remove();
-        } else {
-          showThanksModal(message.failure);
-        }
-      });
+    forms.forEach(item => {
+        postData(item);
     });
-  }
+  
+    function postData(form) {
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
 
-  function showThanksModal(message) {
-    const prevModalDialog = document.querySelector('.modal__dialog');
-    
-    prevModalDialog.classList.add('hide');
-    openModal();
+            const statusMessage = document.createElement('img');
+            statusMessage.src = message.loading;
+            statusMessage.style.cssText = `
+                display: block;
+                margin: 0 auto;
+            `;
+            form.insertAdjacentElement('afterend', statusMessage);
 
-    const thanksModal = document.createElement('div');
-    thanksModal.classList.add('modal__dialog');
-    thanksModal.innerHTML = `
-      <div class="modal__content">
-        <div class="modal__close" data-close>×</div>
-        <div class="modal__title">${message}</div>
-      </div>
-    `;
+            // new FormData() збирає дані з форми,
+            // але потрібно обов'язково,
+            // щоб в формах був прописаний атрибут 'name'
+            // в такому випадку нам не потрібно відправляти json
+            const formData = new FormData(form);
 
-    document.querySelector('.modal').append(thanksModal);
+            // Також дані форми можна передавати в формати json:
+            const object = {};
 
-    setTimeout(() => {
-      thanksModal.remove();
-      prevModalDialog.classList.add('show');
-      prevModalDialog.classList.remove('hide');
-      closeModal();
-    }, 4000);
-  }
+            formData.forEach(function(value, key) {
+                object[key] = value;
+            });
+
+            fetch('./server.php', {
+                method: 'POST',
+                headers: {
+                'Content-type': 'application/json'
+                },
+                body: JSON.stringify(object)
+            })
+            .then(data => data.text())
+            .then(data => {
+                console.log(data);
+                showThanksModal(message.success);
+                statusMessage.remove();
+            })
+            .catch(() => {
+                showThanksModal(message.failure);
+            })
+            .finally(() => {
+                form.reset();
+            });
+        });
+    }
+
+    function showThanksModal(message) {
+        const prevModalDialog = document.querySelector('.modal__dialog');
+        
+        prevModalDialog.classList.add('hide');
+        openModal();
+
+        const thanksModal = document.createElement('div');
+        thanksModal.classList.add('modal__dialog');
+        thanksModal.innerHTML = `
+            <div class="modal__content">
+                <div class="modal__close" data-close>×</div>
+                <div class="modal__title">${message}</div>
+            </div>
+        `;
+
+        document.querySelector('.modal').append(thanksModal);
+
+        setTimeout(() => {
+            thanksModal.remove();
+            prevModalDialog.classList.add('show');
+            prevModalDialog.classList.remove('hide');
+            closeModal();
+        }, 4000);
+    }
 });
