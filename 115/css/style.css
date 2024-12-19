@@ -1,0 +1,9 @@
+.slider-wrap {
+    width: 100%;
+    max-width: 600px;
+    margin: 40px auto;
+}
+
+.my-slider img {
+    width: 100%;
+}
