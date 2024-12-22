@@ -1,6 +1,0 @@
-{
-  "dependencies": {
-    "tiny-slider": "^2.9.4",
-    "webpack-cli": "^5.1.4"
-  }
-}

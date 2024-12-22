@@ -1,2 +1,4 @@
-*/node_modules/
-*/dist/
+JS/*/node_modules/
+JS/*/dist/
+React/*/node_modules/
+React/*/dist/
