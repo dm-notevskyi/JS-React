@@ -10,7 +10,8 @@ class WhoAmI extends Component {
         // якщо ми хочемо змінювати динамічно якісь властивості
         // то ми маємо записати їх в об'єкт 'this.state':
         this.state = {
-            years: 27
+            years: 27,
+            position: ''
         }
     }
 
@@ -27,15 +28,32 @@ class WhoAmI extends Component {
         }));
     }
 
+    commitInputChanges = (e) => {
+        this.setState({
+            position: e.target.value
+        });
+    }
+
     render() {
         // Робимо деструкуризацію об'єкту 'this.props', дістаючи з нього потрібні нам змінні (name, surname, link)
         const {name, surname, link} = this.props;
+        const {years, position} = this.state;
 
         return (
+            // onChange - в react те саме, що і inInput
             <div>
                 <button onClick={this.nextYear}>+++</button>
-                <h1>My name is {name}, surname - {surname}, age - {this.state.years}</h1>
+                <h1>
+                    My name is {name}, surname - {surname}, 
+                    age - {years}, 
+                    position - {position}
+                </h1>
                 <a href={link}>My profile</a>
+
+                <form>
+                    <span>Type a position</span>
+                    <input type="text" onChange={this.commitInputChanges} />
+                </form>
             </div>
         )
     }
