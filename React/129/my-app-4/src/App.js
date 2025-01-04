@@ -1,5 +1,39 @@
+import { styled } from 'styled-components';
 import { Component } from 'react';
 import './App.css';
+
+// Styled Components
+const EmpItem = styled.div`
+    padding: 20px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    box-shadow: 5px 5px 10px rgba(0,0,0,.2);
+    // Ми можемо навіть задавати стилі для дочірніх елементів компоненту:
+    a {
+        display: block;
+        margin: 10px 0 10px 0;
+        // Ми можемо використовувати props для динамічних стилів:
+        color: ${props => props.active ? 'orange' : 'black'};
+    }
+    input {
+        display: block;
+        margin: 10px auto 0;
+    }
+`;
+
+const Header = styled.h2`
+    font-size: 22px;
+`;
+
+// Ми можемо експортувати styled components:
+export const Button = styled.button`
+    display: block;
+    padding: 5px 15px;
+    margin: 0 auto;
+    background-color: gold;
+    border: 1px solid rgba(0,0,0,.2);
+    box-shadow: 5px 5px 10px rgba(0,0,0,.2);
+`;
 
 class WhoAmI extends Component {
     // props в класовому компоненті передаються через constructor.
@@ -40,30 +74,38 @@ class WhoAmI extends Component {
         const {years, position} = this.state;
 
         return (
-            // onChange - в react те саме, що і inInput
-            <div>
-                <button onClick={this.nextYear}>+++</button>
-                <h1>
+            // onChange - в react те саме, що і onInput
+            // Ми також можемо передавати props в styled components
+            <EmpItem active>
+                <Button onClick={this.nextYear}>+++</Button>
+                <Header>
                     My name is {name}, surname - {surname}, 
                     age - {years}, 
                     position - {position}
-                </h1>
+                </Header>
                 <a href={link}>My profile</a>
 
                 <form>
                     <span>Type a position</span>
                     <input type="text" onChange={this.commitInputChanges} />
                 </form>
-            </div>
+            </EmpItem>
         )
     }
 }
 
+const Wrapper = styled.div`
+    width: 600px;
+    margin: 80px auto 0 auto;
+`;
+
 function App() {
     return (
         <div className="App">
-            <WhoAmI name="John" surname="Smith" link="facebook.com"/>
-            <WhoAmI name="Sara" surname="Blane" link="instagram.com"/>
+            <Wrapper>
+                <WhoAmI name="John" surname="Smith" link="facebook.com"/>
+                <WhoAmI name="Sara" surname="Blane" link="instagram.com"/>
+            </Wrapper>
         </div>
     );
 }

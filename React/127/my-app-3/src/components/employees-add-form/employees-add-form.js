@@ -1,5 +1,6 @@
 import { Component } from 'react';
-import './employees-add-form.css';
+// import './employees-add-form.css';
+import './employees-add-form.scss';
 
 class EmployeesAddForm extends Component {
     constructor(props) {
@@ -20,13 +21,34 @@ class EmployeesAddForm extends Component {
         });
     }
 
+    onSubmit = (e) => {
+        e.preventDefault();
+        
+        const {name, salary} = this.state,
+              {onAdd} = this.props;
+
+        if (name.length < 3 || salary === '') {
+            e.target.querySelector('.text-danger').style.display = 'block';
+        } else {
+            onAdd(name, salary);
+            e.target.querySelector('.text-danger').style.display = 'none';
+            this.setState({
+                name: '',
+                salary: ''
+            });
+        }
+    }
+
     render() {
         const {name, salary} = this.state;
 
         return (
             <div className="app-add-form">
                 <h3>Add new employee</h3>
-                <form className="add-form d-flex">
+                <form 
+                    className="add-form d-flex flex-wrap"
+                    onSubmit={this.onSubmit}
+                >
                     <input 
                         type="text" 
                         className="form-control new-post-label" 
@@ -57,6 +79,9 @@ class EmployeesAddForm extends Component {
                     />
     
                     <button className="btn btn-outline-light">Add</button>
+                    <div className="text-danger">
+                        <small>Incorrect data</small>
+                    </div>
                 </form>
             </div>
         );

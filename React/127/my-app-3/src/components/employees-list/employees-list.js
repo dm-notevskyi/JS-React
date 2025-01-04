@@ -2,7 +2,7 @@ import EmployeesListItem from "../employees-list-item/employees-list-item";
 
 import './employees-list.css';
 
-const EmployeesList = ({data, onDelete}) => {
+const EmployeesList = ({data, onDelete, onToggleProp}) => {
     const elements = data.map(item => {
         // Робимо деструктуризацію, щоб витягнути з об'єкту 'data' лише значення 'id'
         // Значення 'id' потрібно окремо для пропса 'key' в 'EmployeesListItem'
@@ -13,6 +13,7 @@ const EmployeesList = ({data, onDelete}) => {
                     key={id} 
                     {...itemProps} // в 'itemProps' містяться елементи 'name', 'salary', 'increase' (усі крім 'id')
                     onDelete={() => onDelete(id)} // прийняли цей метод з App, і передаємо його далі з аргументом id (унікальний ключ співробітника)
+                    onToggleProp={(e) => onToggleProp(id, e.currentTarget.getAttribute('data-toggle'))}
                 /> 
     });
 
